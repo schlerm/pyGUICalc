@@ -1,3 +1,3 @@
 # pyGUICalc
 
-##This is a top tier calculator
+#This is a top tier calculator
