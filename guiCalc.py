@@ -1,13 +1,12 @@
 from tkinter import *
 import sys
+import os
 import math
 from lib2to3.pgen2.token import OP
+from reportlab.graphics.samples.excelcolors import backgroundGrey
+import pymsgbox
 
-#Find out how to detect a math overflow error and make an error message for it in a popup.
-# if detect error:
-#    display error message
-
-#Figure out if tkinter supports backgrounds (hopefully animated ones) and add them in
+#add background colors
 
 #Functions and actual calculator stuff
 
@@ -77,10 +76,14 @@ class Calc():
             self.total = float(display.get())
     
     def display(self,value):
-        display.configure(state="normal")
-        display.delete(0,END)
-        display.insert(0,value)
-        display.configure(state="disabled")
+        if math.isinf(int(self.current)):
+            pymsgbox.alert("Error!","Error")
+        else:        
+            display.configure(state="normal")
+            display.delete(0,END)
+            display.insert(0,value)
+            display.configure(state="disabled")
+
     
     def negate(self):
         self.result = False
@@ -97,10 +100,31 @@ class Calc():
         self.current = math.pow((float(display.get())),3)
         self.display(self.current)
         
+    def cuberoot(self):
+        self.result = False
+        self.current = math.pow((float(display.get())),(1/3))
+        self.display(self.current)
+        
+    def squareroot(self):
+        self.result = False
+        self.current = math.pow((float(display.get())),(1/2))
+        self.display(self.current)
+        
+        
     def percent(self):
         self.result = False
         self.current = (float(display.get())/100)
         self.display(self.current)      
+    
+    def pi(self):
+        self.result = False
+        self.current = float(math.pi)
+        self.display(self.current)
+        
+    def natnumber(self):
+        self.result = False
+        self.current = float(math.e)
+        self.display(self.current)
           
 #Declaring the calculator and other things
 
@@ -114,26 +138,26 @@ calclabel=Label(calc,text="GUICalc",font=("Courier New",30,'bold'))
 
 #Display
 
-display=Entry(frame,bd = 20,insertwidth = 1,font = 30)
+display=Entry(frame,bd = 10,insertwidth = 1,font = 30)
 display.insert(0,"0")
 display.pack(side = TOP)
-display.configure(state="disabled")
+display.config(state = "disabled",disabledbackground = "black",disabledforeground = "#00FFFF")
 
 #First row
 
 frame0 = Frame(calc)
 frame0.pack(side = TOP)
 
-AC = Button(frame0,padx = 16,pady = 16,bd = 8,text = "C",fg="gray",command = added_value.allClear)
+AC = Button(frame0,padx = 16,pady = 16,bd = 4,text = "C",fg="gray",command = added_value.allClear)
 AC.pack(side=LEFT)
 
-negate = Button(frame0,padx = 16,pady = 16,bd = 8,text = "+/-",fg="gray",command = added_value.negate)
+negate = Button(frame0,padx = 16,pady = 16,bd = 4,text = chr(177),fg="gray",command = added_value.negate)
 negate.pack(side=LEFT)
 
-percent = Button(frame0,padx = 16,pady = 16,bd = 8,text = "%",fg="gray",command = added_value.percent)
+percent = Button(frame0,padx = 16,pady = 16,bd = 4,text = "%",fg="gray",command = added_value.percent)
 percent.pack(side=LEFT)
 
-divide = Button(frame0,padx = 16,pady = 16,bd = 8,text = "/",fg="gray",command = lambda: added_value.operator("divide"))
+divide = Button(frame0,padx = 16,pady = 16,bd = 4,text = "/",fg="gray",command = lambda: added_value.operator("divide"))
 divide.pack(side=LEFT)
 
 #Second row
@@ -141,16 +165,16 @@ divide.pack(side=LEFT)
 frame1 = Frame(calc)
 frame1.pack(side = TOP)
 
-seven = Button(frame1,padx = 16,pady = 16,bd = 8,text = "7",fg="gray",command = lambda: added_value.number(7))
+seven = Button(frame1,padx = 16,pady = 16,bd = 4,text = "7",fg="gray",command = lambda: added_value.number(7))
 seven.pack(side=LEFT)
 
-eight = Button(frame1,padx = 16,pady = 16,bd = 8,text = "8",fg="gray",command = lambda: added_value.number(8))
+eight = Button(frame1,padx = 16,pady = 16,bd = 4,text = "8",fg="gray",command = lambda: added_value.number(8))
 eight.pack(side=LEFT)
 
-nine = Button(frame1,padx = 16,pady = 16,bd = 8,text = "9",fg="gray",command = lambda: added_value.number(9))
+nine = Button(frame1,padx = 16,pady = 16,bd = 4,text = "9",fg="gray",command = lambda: added_value.number(9))
 nine.pack(side=LEFT)
 
-times = Button(frame1,padx = 16,pady = 16,bd = 8,text = "*",fg="gray",command = lambda: added_value.operator("times"))
+times = Button(frame1,padx = 16,pady = 16,bd = 4,text = "*",fg="gray",command = lambda: added_value.operator("times"))
 times.pack(side=LEFT)
 
 #Third row
@@ -158,16 +182,16 @@ times.pack(side=LEFT)
 frame2 = Frame(calc)
 frame2.pack(side = TOP)
 
-four = Button(frame2,padx = 16,pady = 16,bd = 8,text = "4",fg="gray",command = lambda: added_value.number(4))
+four = Button(frame2,padx = 16,pady = 16,bd = 4,text = "4",fg="gray",command = lambda: added_value.number(4))
 four.pack(side=LEFT)
 
-five = Button(frame2,padx = 16,pady = 16,bd = 8,text = "5",fg="gray",command = lambda: added_value.number(5))
+five = Button(frame2,padx = 16,pady = 16,bd = 4,text = "5",fg="gray",command = lambda: added_value.number(5))
 five.pack(side=LEFT)
 
-six = Button(frame2,padx = 16,pady = 16,bd = 8,text = "6",fg="gray",command = lambda: added_value.number(6))
+six = Button(frame2,padx = 16,pady = 16,bd = 4,text = "6",fg="gray",command = lambda: added_value.number(6))
 six.pack(side=LEFT)
 
-minus = Button(frame2,padx = 16,pady = 16,bd = 8,text = "-",fg="gray",command = lambda: added_value.operator("minus"))
+minus = Button(frame2,padx = 16,pady = 16,bd = 4,text = "-",fg="gray",command = lambda: added_value.operator("minus"))
 minus.pack(side=LEFT)
 
 #Fourth row
@@ -175,16 +199,16 @@ minus.pack(side=LEFT)
 frame3 = Frame(calc)
 frame3.pack(side = TOP)
 
-one = Button(frame3,padx = 16,pady = 16,bd = 8,text = "1",fg="gray",command = lambda: added_value.number(1))
+one = Button(frame3,padx = 16,pady = 16,bd = 4,text = "1",fg="gray",command = lambda: added_value.number(1))
 one.pack(side=LEFT)
 
-two = Button(frame3,padx = 16,pady = 16,bd = 8,text = "2",fg="gray",command = lambda: added_value.number(2))
+two = Button(frame3,padx = 16,pady = 16,bd = 4,text = "2",fg="gray",command = lambda: added_value.number(2))
 two.pack(side=LEFT)
 
-three = Button(frame3,padx = 16,pady = 16,bd = 8,text = "3",fg="gray",command = lambda: added_value.number(3))
+three = Button(frame3,padx = 16,pady = 16,bd = 4,text = "3",fg="gray",command = lambda: added_value.number(3))
 three.pack(side=LEFT)
 
-plus = Button(frame3,padx = 16,pady = 16,bd = 8,text = "+",fg="gray",command = lambda: added_value.operator("plus"))
+plus = Button(frame3,padx = 16,pady = 16,bd = 4,text = "+",fg="gray",command = lambda: added_value.operator("plus"))
 plus.pack(side=LEFT)
 
 #Fifth row
@@ -192,16 +216,16 @@ plus.pack(side=LEFT)
 frame4 = Frame(calc)
 frame4.pack(side = TOP)
 
-zero = Button(frame4,padx = 16,pady = 16,bd = 8,text = "0",fg="gray")
+zero = Button(frame4,padx = 16,pady = 16,bd = 4,text = "0",fg="gray",command = lambda: added_value.number(0))
 zero.pack(side=LEFT)
 
-pi = Button(frame4,padx = 16,pady = 16,bd = 8,text = "π",fg="gray")
+pi = Button(frame4,padx = 16,pady = 16,bd = 4,text = "π",fg="gray",command = added_value.pi)
 pi.pack(side=LEFT)
 
-decimal = Button(frame4,padx = 16,pady = 16,bd = 8,text = ".",fg="gray")
+decimal = Button(frame4,padx = 16,pady = 16,bd = 4,text = ".",fg="gray",command = lambda: added_value.number("."))
 decimal.pack(side=LEFT)
 
-equals = Button(frame4,padx = 16,pady = 16,bd = 8,text = "=",fg="gray",command = added_value.equals)
+equals = Button(frame4,padx = 16,pady = 16,bd = 4,text = "=",fg="gray",command = added_value.equals)
 equals.pack(side=LEFT)
 
 #Sixth row
@@ -209,14 +233,25 @@ equals.pack(side=LEFT)
 frame5 = Frame(calc)
 frame5.pack(side = TOP)
 
-square = Button(frame5,padx = 16,pady = 16,bd = 8,text = "x²",fg="gray",command = added_value.squared)
+square = Button(frame5,padx = 16,pady = 16,bd = 4,text = "x²",fg="gray",command = added_value.squared)
 square.pack(side=LEFT)
 
-cubed = Button(frame5,padx = 16,pady = 16,bd = 8,text = "x³",fg="gray",command = added_value.cubed)
+cubed = Button(frame5,padx = 16,pady = 16,bd = 4,text = "x³",fg="gray",command = added_value.cubed)
 cubed.pack(side=LEFT)
 
+cbroot = Button(frame5,padx = 16,pady = 16,bd = 4,text = "∛",fg="gray",command = added_value.cuberoot)
+cbroot.pack(side=LEFT)
 
+sqroot = Button(frame5,padx = 16,pady = 16,bd = 4,text = "√",fg="gray",command = added_value.squareroot)
+sqroot.pack(side=LEFT)
 
+#Seventh row
+
+frame6 = Frame(calc)
+frame6.pack(side = TOP)
+
+e = Button(frame6,padx = 16,pady = 16,bd = 4,text = "e",fg="gray",command = added_value.natnumber)
+e.pack(side=LEFT)
 
 calc.mainloop()
 
