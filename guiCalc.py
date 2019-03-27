@@ -6,10 +6,6 @@ from lib2to3.pgen2.token import OP
 from reportlab.graphics.samples.excelcolors import backgroundGrey
 import pymsgbox
 
-#add background colors
-
-#Functions and actual calculator stuff
-
 class Calc():
     def __init__(self):
         self.total = 0
