@@ -10,18 +10,19 @@ class Calc():
     def __init__(self):
         self.total = 0
         self.current = ""
-        self.inputValue = True
+        self.inputVal = True
         self.check_sum = False
         self.op = ""
         self.result = False
-        
+        self.power = ""
+                
     def number(self,num):
         self.result = False
         ans = display.get()
         input = str(num)
-        if self.inputValue:
+        if self.inputVal:
             self.current = input
-            self.inputValue = False
+            self.inputVal = False
         else:
             if input == ".":
                 if input in ans:
@@ -38,7 +39,7 @@ class Calc():
             self.total *= self.current
         if self.op == "divide":
             self.total /= self.current
-        self.inputValue = True
+        self.inputVal = True
         self.check_sum = False
         self.display(self.total)      
      
@@ -48,7 +49,7 @@ class Calc():
             self.validOperator()
         elif not self.result:
             self.total = self.current
-            self.inputValue = True
+            self.inputVal = True
         self.check_sum = True
         self.op = op
         self.result = False
@@ -57,7 +58,7 @@ class Calc():
         self.result = False
         self.current = "0"
         self.display(0)
-        self.inputValue = True
+        self.inputVal = True
     
     def allClear(self):
         self.clearDisplay()
@@ -102,7 +103,6 @@ class Calc():
         self.result = False
         self.current = math.pow((float(display.get())),(1/2))
         self.display(self.current)
-        
         
     def percent(self):
         self.result = False
